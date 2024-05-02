@@ -1,19 +1,10 @@
 const BooksService = require("./books.service");
+
+const generateManyBooks = require("../fakes/book.fake.mjs");
+
 // Aqui estamos conectandonos a la db, pero eso en unit testing no se debe hacer para eso es el mocking
 // El mocking es simular lo que enviaria la base de datos
 // Se crea el Stub que es la informacion que se quiere simular
-
-// Este array se crea con el fin de simular la respuesta
-const fakeBooks = [
-  {
-    id: 1,
-    name: "Harry Potter y la orden del fenix",
-  },
-  {
-    id: 2,
-    name: "Los juegos del hambre",
-  },
-];
 
 // Se crea el mock para mirar el comportamiento de una funcion
 const mockGetAll = jest.fn();
@@ -44,13 +35,14 @@ describe("Test for book service", () => {
   describe("test for getBooks", () => {
     test("should return a list book", async () => {
       // Arrange
+      const fakeBooks = generateManyBooks(20);
       // Con mock resolve se simula una respuesta Promise
       mockGetAll.mockResolvedValue(fakeBooks);
       // Act
       const books = await service.getBooks();
       console.log(books);
       // Assert
-      expect(books.length).toEqual(2);
+      expect(books.length).toEqual(fakeBooks.length);
       // Fue llamada
       expect(mockGetAll).toHaveBeenCalled();
       // Cuantas veces fue llamado
